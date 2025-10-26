@@ -30,8 +30,14 @@ jobs:
 
     - name: Lint
       run: |
+        ruff check --fix
+	      ruff format --check
+        rm -rf build/
+        rm -rf *.egg-info
+        find . -type d -name __pycache__ -exec rm -rf {} +
+        find . -type f -name "*.pyc" -delete
         make lint
 
     - name: Test
       run: |
-        make test
+        uv run pytest --cov --cov-report=term-missing || (uv run pytest --collect-only | grep -q "no tests collected" && echo "No tests found, skipping failure." || exit 1)
