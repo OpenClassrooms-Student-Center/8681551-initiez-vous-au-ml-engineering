@@ -22,9 +22,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv venv --native-tls
-        uv lock --native-tls 
-        uv sync --native-tls
+        uv venv 
+        uv sync 
       
     - name : Install Ruff 
       uses : astral-sh/ruff-action@v3
