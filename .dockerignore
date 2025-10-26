@@ -1,0 +1,10 @@
+.venv
+.git
+.vscode
+*.csv
+*.parquet
+*.xlsx
+p1_c4_mapping.py
+p1_c3.py
+sandbox.py
+test_*.py
