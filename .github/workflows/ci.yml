@@ -22,21 +22,20 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv venv 
-        uv sync 
-      
-    - name : Install Ruff 
-      uses : astral-sh/ruff-action@v3
+        uv venv
+        uv sync
+
+    - name: Install Ruff
+      uses: astral-sh/ruff-action@v3
 
     - name: Lint
       run: |
         ruff check --fix
-	      ruff format --check
+        ruff format --check
         rm -rf build/
         rm -rf *.egg-info
         find . -type d -name __pycache__ -exec rm -rf {} +
         find . -type f -name "*.pyc" -delete
-        make lint
 
     - name: Test
       run: |
