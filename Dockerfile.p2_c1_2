@@ -40,8 +40,8 @@ ENV UV_HTTP_TIMEOUT=1000
 # --------------------- Network Configs -------------------
 
 # When used localy, it is necessary to create a .certs folder containing the VPN certificate file
-COPY .certs/vpn_certificate.crt /usr/local/share/ca-certificates
-RUN update-ca-certificates
+# COPY .certs/vpn_certificate.crt /usr/local/share/ca-certificates
+# RUN update-ca-certificates
 
 
 # --------------------- Main Steps ---------------------
