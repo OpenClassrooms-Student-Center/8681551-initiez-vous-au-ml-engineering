@@ -1,3 +1,15 @@
+# Points à aborder en Screencast 
+# Préambule Docker : Les variables d'environnement, POSTGRE et MLFlow
+# Concept de base : dossier de départ et dossier app 
+# Imaginer que Docker est une page blanche
+# Install Python Ce sont des commandes prêtes à l'emploi du côté Docker
+# Toujours dans la page blanche, on va décaler et définir les variables d'environnement
+# On va copier tout dans le Workdir, parler du .dockerignore 
+# Passer rapidement sur pip install 
+# Expliquer ce que fait CMD et le expose 
+# Lancer un build avec les build-args et les variables d'environnement
+# lancer un docker run en expliquant ce que fait -p 8000:8000
+
 
 # -------- Définition de la distribution Python ----------
 FROM python:3.12-slim
@@ -17,13 +29,17 @@ ENV POSTGRES_PORT=$POSTGRES_PORT
 ENV POSTGRES_DB=$POSTGRES_DB
 ENV POSTGRES_USER=$POSTGRES_USER
 ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV MLFLOW_TRACKING_URI=/app/mlruns
 
 # ------- Transfert des fichiers --------
 COPY . /app
 
+COPY .certs/vpn_certificate.crt /usr/local/share/ca-certificates
+RUN update-ca-certificates
+
 # ------ Installation des packages
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install  -r requirements.txt
 
 # ------ Lancement de l'API 
 EXPOSE 8000
-CMD ["python", "p1_c4_orm.py"]
+CMD ["uvicorn", "p1_c4_orm:app", "--host", "0.0.0.0", "--port", "8000"]

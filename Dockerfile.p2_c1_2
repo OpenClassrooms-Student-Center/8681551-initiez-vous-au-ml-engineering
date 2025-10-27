@@ -1,3 +1,9 @@
+# Point à aborder penant le screencast 
+# On bascule sur UV 
+# Expliquer le système de cache et de layers  pour optimiser le build 
+# Expliquer l'intêret d'un build plus rapide 
+# Demo un build plus rapide 
+
 # ------------------- Base Image + Global Configs -------------
 
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
@@ -5,9 +11,18 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 WORKDIR /app
 
 # -------------------- Snowflake and Azure Configs --------------------
-ARG SNOWFLAKE_ACCOUNT
+ARG POSTGRES_HOST
+ARG POSTGRES_PORT
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
 
-ENV SNOWFLAKE_USER=$SNOWFLAKE_USER
+ENV POSTGRES_HOST=$POSTGRES_HOST
+ENV POSTGRES_PORT=$POSTGRES_PORT
+ENV POSTGRES_DB=$POSTGRES_DB
+ENV POSTGRES_USER=$POSTGRES_USER
+ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV MLFLOW_TRACKING_URI=/app/mlruns
 
 
 # --------------------- UV Configs -------------------------
@@ -46,12 +61,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Activating virtual environment
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Exposing port for Streamlit
-EXPOSE 8501
 
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+EXPOSE 8000
+CMD ["uvicorn", "p1_c4_orm:app", "--host", "0.0.0.0", "--port", "8000"]
 
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
 
 
