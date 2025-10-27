@@ -1,35 +1,27 @@
 # %%
+"""
+Points à aborder en Screencast :
+* Rappel rapide que l'on utilise MLflow pour récupérer
+  un modèle de classif sur la Nouvelle Acquitaine
+* Montrer rapidement les features sur lesquelles les données ont
+  été entrainés
+* Présenter rapidement l'endpoint de classif
+* Présenter rapidement la classe Pydantic
+* Aller sur le terminal et lancer uvicorn
+* Aller sur Chrome et taper le lien de l'API puis aller sur Swagger
+* Walkthough Swagger et test d'une prédiction en live
+* Dire que c'est la même chose qu'on verrait si on faisait un curl
+sur le terminal
+"""
 
-import polars as pl
-import json
+# %%
 import os
 import mlflow
 from mlflow import MlflowClient
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
-from settings import PROJECT_PATH
 
-# from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-
-
-# %%
-
-transactions = pl.read_parquet(
-    os.path.join(PROJECT_PATH, "transactions_post_feature_engineering.parquet")
-)
-
-
-# %%
-
-# %%
-with open("features_used.json", "r") as f:
-    feature_names = json.load(f)
-
-with open("categorical_features_used.json", "r") as f:
-    categorical_features = json.load(f)
-
-# %%
 
 # %%
 # -------------------------- MLflow Model Loading --------------------------
@@ -83,7 +75,7 @@ feature_names
 
 app_simple = FastAPI(
     title="API Simple de Prédiction de Prix Immobilier",
-    description="Une API conviviale pour la prédiction de prix immobiliers utilisant la classification",
+    description="Une API basique pour la prédiction de prix immobiliers utilisant la classification",
     version="1.0.0",
 )
 
@@ -143,143 +135,5 @@ def predict_simple(features: SimplePropertyFeatures, include_probability: bool =
 
     return result
 
-
-# %%
-# -------------------------- ADVANCED FastAPI Application (Production Version) --------------------------
-
-'''
-
-
-@app.post("/predict/regression", response_model=RegressionResponse, tags=["Regression"])
-async def predict_regression(features: PropertyFeatures, model_run_id: str = None):
-    """
-    Predict real estate price value using regression model.
-
-    **Note**: This endpoint is currently under development.
-    The regression model will be available in a future version.
-
-    Args:
-        features (PropertyFeatures): Property characteristics and market indicators
-        model_run_id (str, optional): Specific model run ID to use. Defaults to best model.
-
-    Returns:
-        RegressionResponse: Prediction results with price value
-
-    Raises:
-        HTTPException: If regression model is not available
-    """
-    raise HTTPException(
-        status_code=501,
-        detail="Regression prediction is not yet implemented. "
-        "Please use the classification endpoint for now. "
-        "Regression models will be available in version 2.0.",
-    )
-
-'''
-# %%
-# -------------------------- Run FastAPI Server --------------------------
-"""
-if __name__ == "__main__":
-    print("Choose which API to run:")
-    print("1. Simple API (beginner-friendly): python p1_c3.py simple")
-    print("2. Advanced API (production-ready): python p1_c3.py advanced")
-    print()
-
-    import sys
-
-    if len(sys.argv) > 1 and sys.argv[1] == "simple":
-        print("Starting SIMPLE FastAPI server...")
-        print("API will be available at: http://localhost:8000")
-        print("API documentation at: http://localhost:8000/docs")
-        uvicorn.run(app_simple, host="0.0.0.0", port=8000)
-    else:
-        print("Starting ADVANCED FastAPI server...")
-    print("API will be available at: http://localhost:8000")
-    print("API documentation at: http://localhost:8000/docs")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-"""
-
-# %%
-# -------------------------- Usage Examples --------------------------
-
-"""
-Example usage of both API versions:
-
-## SIMPLE API (Beginner-Friendly)
-Perfect for learning FastAPI basics - no async, no complex features
-
-1. Start the simple server: python p1_c3.py simple
-
-2. Test with curl:
-curl -X POST "http://localhost:8000/predict?include_probability=true" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "type_batiment_Appartement": 1,
-       "surface_habitable": 75.5,
-       "prix_m2_moyen_mois_precedent": 3500.0,
-       "nb_transactions_mois_precedent": 15,
-       "taux_interet": 3.2,
-       "variation_taux_interet": 0.15,
-       "acceleration_taux_interet": 0.08,
-       "longitude": 2.3522,
-       "latitude": 48.8566,
-       "vefa": 0
-     }'
-
-3. Test without probability:
-curl -X POST "http://localhost:8000/predict?include_probability=false" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "surface_habitable": 60.0,
-       "prix_m2_moyen_mois_precedent": 2800.0,
-       "longitude": 2.3522,
-       "latitude": 48.8566,
-       "vefa": 0
-     }'
-
-4. Interactive docs: http://localhost:8000/docs
-
-## ADVANCED API (Production-Ready)
-Full-featured API with async, comprehensive documentation, and multiple endpoints
-
-1. Start the advanced server: python p1_c3.py advanced
-
-2. Test classification endpoint:
-curl -X POST "http://localhost:8000/predict/classification?include_probability=true" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "type_batiment_Appartement": 1,
-       "surface_habitable": 75.5,
-       "prix_m2_moyen_mois_precedent": 3500.0,
-       "nb_transactions_mois_precedent": 15,
-       "taux_interet": 3.2,
-       "variation_taux_interet": 0.15,
-       "acceleration_taux_interet": 0.08,
-       "longitude": 2.3522,
-       "latitude": 48.8566,
-       "vefa": 0
-     }'
-
-3. Health check: curl http://localhost:8000/health
-4. Interactive docs: http://localhost:8000/docs
-
-## Key Differences:
-SIMPLE API:
-- Uses regular functions (no async/await)
-- Uses pandas instead of Polars
-- Single /predict endpoint
-- Simple dictionary responses
-- No health endpoint
-- No regression endpoint
-
-ADVANCED API:
-- Uses async functions
-- Uses Polars for data processing
-- Multiple endpoints (/predict/classification, /predict/regression)
-- Structured Pydantic response models
-- Health check endpoint
-- Comprehensive documentation
-- Future regression support
-"""
 
 # %%

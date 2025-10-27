@@ -42,6 +42,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-ml_engineering}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      MLFLOW_TRACKING_URI: /app/mlruns
 
 volumes:
   postgres_data:

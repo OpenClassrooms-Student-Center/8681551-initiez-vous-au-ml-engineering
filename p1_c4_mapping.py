@@ -1,28 +1,46 @@
 # %%
-import os
+"""
+Points Screencasts à aborder
+* Commencer par le Swagger : Montrer le produit final
+* Passer ensuite aux PropertyFeaturesBusiness
+* Puis à la fonction map business to technical
+* Puis au PropertyFeatures qui est tout à fait normal
+* En profiter montrer tout ce qui est nouveau dans le Swagger
+  qui n'est pas apparu dans le normal
+"""
+
+# %%
 import mlflow
 from mlflow import MlflowClient
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from enum import Enum
 import pandas as pd
+from settings import MLFLOW_TRACKING_URI
 
 
 # %%
-mlruns_path = os.path.abspath("./mlruns")
-mlflow.set_tracking_uri(mlruns_path)
-client = MlflowClient(tracking_uri=mlruns_path)
+print(f"Setting MLflow tracking URI to: {MLFLOW_TRACKING_URI}")
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+client = MlflowClient(tracking_uri=MLFLOW_TRACKING_URI)
 
 # %%
+print("Searching for MLflow runs...")
 runs = mlflow.search_runs(
     search_all_experiments=True, order_by=["metrics.average_test_f1 DESC"]
 )
+print(f"Found {len(runs)} runs")
 
 # %%
 best_run_id = runs.iloc[0]["run_id"]
+print(f"Best run ID: {best_run_id}")
 
 # %%
-model = mlflow.sklearn.load_model(f"runs:/{best_run_id}/catboost_classifier")
+# Load the model using the runs:/ URI
+model_uri = f"runs:/{best_run_id}/catboost_classifier"
+print(f"Loading model from: {model_uri}")
+model = mlflow.sklearn.load_model(model_uri)
+print("Model loaded successfully!")
 
 
 # Load the features used in the best run

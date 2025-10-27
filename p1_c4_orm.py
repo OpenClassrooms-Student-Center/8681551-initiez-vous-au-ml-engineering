@@ -1,5 +1,15 @@
 # %%
-import os
+"""
+Points à aborder en Screencast
+* Partir encore une fois du Swagger, montrer un exemple qui
+  fonctionne, puis un exemple, où nous n'avons pas de données
+  dans l'historique
+* Présenter le modèle SQL HistoricalTransaction
+* Présenter la fonction calculate historical features
+* ??? Présenter le script d'init de la base de données ?
+"""
+
+# %%
 import mlflow
 from mlflow import MlflowClient
 from fastapi import FastAPI, HTTPException
@@ -9,27 +19,43 @@ import pandas as pd
 import numpy as np
 from sqlmodel import SQLModel, create_engine, Session, select
 from models import HistoricalTransaction
-from settings import DATABASE_URL
+from settings import DATABASE_URL, MLFLOW_TRACKING_URI
 
 # %%
 # Database engine configuration
 engine = create_engine(DATABASE_URL, echo=False)
 
 # %%
-mlruns_path = os.path.abspath("./mlruns")
-mlflow.set_tracking_uri(mlruns_path)
-client = MlflowClient(tracking_uri=mlruns_path)
+print(f"Setting MLflow tracking URI to: {MLFLOW_TRACKING_URI}")
 
 # %%
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+client = MlflowClient(tracking_uri=MLFLOW_TRACKING_URI)
+
+# %%
+print("Searching for MLflow runs...")
 runs = mlflow.search_runs(
     search_all_experiments=True, order_by=["metrics.average_test_f1 DESC"]
 )
+print(f"Found {len(runs)} runs")
 
 # %%
 best_run_id = runs.iloc[0]["run_id"]
+print(f"Best run ID: {best_run_id}")
+
+# Get the experiment ID for the best run
+best_run = client.get_run(best_run_id)
+experiment_id = best_run.info.experiment_id
+print(f"Experiment ID: {experiment_id}")
 
 # %%
-model = mlflow.sklearn.load_model(f"runs:/{best_run_id}/catboost_classifier")
+# Construct the direct path to the model
+model_path = (
+    f"{MLFLOW_TRACKING_URI}/{experiment_id}/{best_run_id}/artifacts/catboost_classifier"
+)
+print(f"Loading model from: {model_path}")
+model = mlflow.sklearn.load_model(model_path)
+print("Model loaded successfully!")
 
 
 # Load the features used in the best run
@@ -45,8 +71,6 @@ feature_names = eval(features_used)
 categorical_features = eval(categorical_features_used)
 
 
-# %%
-feature_names
 # %%
 
 # -------------------------- Database Configuration --------------------------
