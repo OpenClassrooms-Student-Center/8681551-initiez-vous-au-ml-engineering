@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: us-east-2
-  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com
   API_IMAGE_NAME: ml-engineering-course/cd-demo
 
 jobs:
