@@ -46,15 +46,11 @@ RUN update-ca-certificates
 
 # --------------------- Main Steps ---------------------
 
-# ----- UV Project Install ------
-# Install the project's dependencies using the lockfile and settings, for max speed
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project --no-dev --verbose
-
+# Copy project files
 COPY . /app
 
+# ----- UV Project Install ------
+# Install the project's dependencies using the lockfile and settings, for max speed
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
