@@ -23,7 +23,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.p2_c1_1
+      dockerfile: Dockerfile.p2_c1_2
       args:
         POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
         POSTGRES_PORT: ${POSTGRES_PORT:-5432}
