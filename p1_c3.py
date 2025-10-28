@@ -60,9 +60,6 @@ categorical_features_used = run.data.params.get("categorical_features", "[]")
 
 # %%
 
-
-# %%
-
 # Parse the JSON strings to get the actual feature lists
 feature_names = eval(features_used)
 categorical_features = eval(categorical_features_used)

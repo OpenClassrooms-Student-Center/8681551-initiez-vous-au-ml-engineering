@@ -19,6 +19,12 @@ DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST
 # MLflow tracking URI configuration
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", os.path.abspath("./mlruns"))
 
+# Remote MLflow tracking server URI
+MLFLOW_REMOTE_TRACKING_URI = os.getenv(
+    "MLFLOW_REMOTE_TRACKING_URI",
+    "http://ec2-3-142-120-99.us-east-2.compute.amazonaws.com:5000",
+)
+
 
 # ---------------------- Raw Column names ------------------
 TRANSACTION_DATE = "date_transaction"

@@ -34,8 +34,6 @@ ENV MLFLOW_TRACKING_URI=/app/mlruns
 # ------- Transfert des fichiers --------
 COPY . /app
 
-COPY .certs/vpn_certificate.crt /usr/local/share/ca-certificates
-RUN update-ca-certificates
 
 # ------ Installation des packages
 RUN pip install  -r requirements.txt
