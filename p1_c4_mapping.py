@@ -63,26 +63,26 @@ feature_names
 app = FastAPI(
     title="API de Prédiction des Prix Immobiliers",
     description="""
-    ## API de Prédiction des Prix Immobiliers
-    
-    Cette API fournit des prédictions d'apprentissage automatique pour les prix immobiliers en utilisant différents types de modèles.
-    
-    ### Types de Modèles Disponibles :
-    - **classification** : Prédit les catégories de prix (ex: bas, moyen, haut)
-    - **regression** : Prédit les valeurs de prix exactes (bientôt disponible !)
-    
-    ### Fonctionnalités :
-    - Paramètre de chemin pour spécifier le type de modèle (classification/regression)
-    - Paramètres de requête pour des options supplémentaires
-    - Validation d'entrée complète avec les modèles Pydantic
-    - Scores de probabilité optionnels pour les modèles de classification
-    - Documentation interactive de l'API via Swagger UI
-    
-    ### Utilisation :
-    1. Choisissez votre type de modèle dans le chemin (ex: `/predict/classification`)
-    2. Optionnellement, définissez les paramètres de requête (ex: `?include_probability=true`)
-    3. Envoyez les caractéristiques de la propriété dans le corps de la requête
-    4. Recevez les prédictions avec les scores de confiance
+API de Prédiction des Prix Immobiliers
+
+Cette API fournit des prédictions d'apprentissage automatique pour les prix immobiliers en utilisant différents types de modèles.
+
+**Types de Modèles Disponibles :**
+- **classification** : Prédit les catégories de prix (ex: bas, moyen, haut)
+- **regression** : Prédit les valeurs de prix exactes (bientôt disponible !)
+
+**Fonctionnalités :**
+- Paramètre de chemin pour spécifier le type de modèle (classification/regression)
+- Paramètres de requête pour des options supplémentaires
+- Validation d'entrée complète avec les modèles Pydantic
+- Scores de probabilité optionnels pour les modèles de classification
+- Documentation interactive de l'API via Swagger UI
+
+**Utilisation :**
+1. Choisissez votre type de modèle dans le chemin (ex: `/predict/classification`)
+2. Optionnellement, définissez les paramètres de requête (ex: `?include_probability=true`)
+3. Envoyez les caractéristiques de la propriété dans le corps de la requête
+4. Recevez les prédictions avec les scores de confiance
     """,
     version="1.0.0",
     contact={
@@ -434,3 +434,6 @@ async def predict_classification(
         probability=float(probability),
         model_run_id=model_run_id or best_run_id,
     )
+
+
+# %%
