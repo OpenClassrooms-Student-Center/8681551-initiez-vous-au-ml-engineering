@@ -6,30 +6,43 @@ Ce dépôt accompagne les screencasts du cours OpenClassrooms **"Initiez-vous au
 
 ## Correspondance fichiers / chapitres du cours
 
-Chaque script Python correspond a une combinaison **Partie + Chapitre** du cours. La convention de nommage est `p{partie}_c{chapitre}.py` :
+Les fichiers du dépôt correspondent aux **Parties et Chapitres** du cours. Les scripts Python suivent la convention `p{partie}_c{chapitre}.py`. Les autres fichiers (Dockerfiles, workflows CI/CD) sont rattachés à la partie correspondante dans le tableau ci-dessous.
 
-| Fichier | Partie & Chapitre | Ce que vous apprenez |
-|---------|-------------------|----------------------|
-| `p1_c3.py` | Partie 1, Chapitre 3 | Créer une API simple avec FastAPI pour servir un modèle ML |
-| `p1_c4_mapping.py` | Partie 1, Chapitre 4 | Séparer la logique métier de l'implémentation technique |
-| `p1_c4_orm.py` | Partie 1, Chapitre 4 | Intégrer une base de données avec SQLModel pour calculer des features historiques |
+### Partie 1 — Servir un modèle ML via une API
 
-Les fichiers sont pensés pour être découverts dans cet ordre. Chaque étape introduit de nouveaux concepts tout en s'appuyant sur les précédents.
+| Fichier | Chapitre | Ce que vous apprenez |
+|---------|----------|----------------------|
+| `p1_c3.py` | Chapitre 3 | Créer une API simple avec FastAPI pour servir un modèle ML |
+| `p1_c4_mapping.py` | Chapitre 4 | Séparer la logique métier de l'implémentation technique |
+| `p1_c4_orm.py` | Chapitre 4 | Intégrer une base de données avec SQLModel pour calculer des features historiques |
 
-## Fichiers de support
+### Partie 2 — Conteneurisation, CI/CD et déploiement
+
+| Fichier | Chapitre | Ce que vous apprenez |
+|---------|----------|----------------------|
+| `Dockerfile.p2_c1_1` | Chapitre 1 | Écrire un premier Dockerfile avec pip pour conteneuriser l'API |
+| `Dockerfile.p2_c1_2` | Chapitre 1 | Optimiser le Dockerfile avec uv et le système de cache Docker |
+| `docker-compose.yml` | Chapitre 1 | Orchestrer plusieurs services (API + PostgreSQL) |
+| `.dockerignore` | Chapitre 1 | Exclure les fichiers inutiles du build Docker |
+| `.github/workflows/ci.yml` | Chapitre 2 | Mettre en place l'intégration continue (lint, tests) sur les Pull Requests |
+| `.github/workflows/cd.yml` | Chapitre 4 | Automatiser le déploiement continu (build et push vers AWS ECR) |
+| `.github/pull_request_template.md` | Chapitre 2 | Standardiser les Pull Requests avec un template |
+
+### Fichiers de support
 
 | Fichier | Rôle |
 |---------|------|
 | `models.py` | Modèles SQLModel (définition de la table `HistoricalTransaction`) |
 | `settings.py` | Configuration centralisée (base de données, MLflow, noms de colonnes) |
 | `init_db.py` | Script d'initialisation de la base de données depuis un fichier parquet |
-| `docker-compose.yml` | Orchestration Docker (API + PostgreSQL) |
-| `Dockerfile.p2_c1_2` | Dockerfile de production optimisé avec uv |
 
 ## Prérequis
 
+Ce projet a été conçu pour fonctionner en environnement **Linux** (ou **WSL** sous Windows).
+
 - **Python 3.12+**
-- **Docker Desktop** (pour le déploiement conteneurisé)
+- **Git**
+- **Docker** (pour le déploiement conteneurisé)
 - **uv** (gestionnaire de paquets Python) - [installation](https://docs.astral.sh/uv/)
 
 ## Lancer le projet
@@ -60,18 +73,20 @@ uv run uvicorn p1_c4_orm:app --reload
 
 ## Variables d'environnement
 
-Le projet utilise des variables d'environnement pour la configuration. Créez un fichier `.env` à la racine du projet :
+Le projet utilise des variables d'environnement pour la configuration de la base de données et de MLflow. Ajoutez-les à votre `~/.bashrc` (ou `~/.zshrc`) :
 
-```env
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_DB=ml_engineering
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=<votre_mot_de_passe>
-MLFLOW_TRACKING_URI=./mlruns
+```bash
+export POSTGRES_HOST=localhost
+export POSTGRES_PORT=5432
+export POSTGRES_DB=ml_engineering
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=<votre_mot_de_passe>
+export MLFLOW_TRACKING_URI=./mlruns
 ```
 
-> **Note** : Ne commitez jamais de fichiers `.env` contenant des mots de passe. Le fichier `.env` est déjà exclu via `.gitignore`.
+Puis rechargez votre shell avec `source ~/.bashrc`.
+
+> **Note** : Lors de l'exécution via Docker, ces variables sont définies directement dans `docker-compose.yml`.
 
 ## Architecture
 
@@ -124,3 +139,7 @@ python init_db.py --drop-existing  # Réinitialiser
 
 - **CI** (Pull Requests) : Lint Ruff, formatage, tests pytest avec couverture
 - **CD** (branche main) : Build et push vers AWS ECR
+
+## Auteur
+
+Cours conçu par **Zakaria Bouayyad** — [LinkedIn](https://www.linkedin.com/in/zakaria-bouayyad/)
