@@ -1,15 +1,5 @@
 # %%
-"""
-Points à aborder en Screencast
-* Partir encore une fois du Swagger, montrer un exemple qui
-  fonctionne, puis un exemple, où nous n'avons pas de données
-  dans l'historique
-* Présenter le modèle SQL HistoricalTransaction
-* Présenter la fonction calculate historical features
-* ??? Présenter le script d'init de la base de données ?
-"""
-
-# %%
+import json
 import mlflow
 from mlflow import MlflowClient
 from fastapi import FastAPI, HTTPException
@@ -67,8 +57,8 @@ categorical_features_used = run.data.params.get("categorical_features", "[]")
 # %%
 
 # Parse the JSON strings to get the actual feature lists
-feature_names = eval(features_used)
-categorical_features = eval(categorical_features_used)
+feature_names = json.loads(features_used)
+categorical_features = json.loads(categorical_features_used)
 
 
 # %%

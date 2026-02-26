@@ -1,15 +1,5 @@
 # %%
-"""
-Points Screencasts à aborder
-* Commencer par le Swagger : Montrer le produit final
-* Passer ensuite aux PropertyFeaturesBusiness
-* Puis à la fonction map business to technical
-* Puis au PropertyFeatures qui est tout à fait normal
-* En profiter montrer tout ce qui est nouveau dans le Swagger
-  qui n'est pas apparu dans le normal
-"""
-
-# %%
+import json
 import mlflow
 from mlflow import MlflowClient
 from fastapi import FastAPI, HTTPException
@@ -52,8 +42,8 @@ categorical_features_used = run.data.params.get("categorical_features", "[]")
 # %%
 
 # Parse the JSON strings to get the actual feature lists
-feature_names = eval(features_used)
-categorical_features = eval(categorical_features_used)
+feature_names = json.loads(features_used)
+categorical_features = json.loads(categorical_features_used)
 
 
 # %%

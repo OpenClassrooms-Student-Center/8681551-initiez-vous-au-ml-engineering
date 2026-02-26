@@ -1,20 +1,5 @@
 # %%
-"""
-Points à aborder en Screencast :
-* Rappel rapide que l'on utilise MLflow pour récupérer
-  un modèle de classif sur la Nouvelle Acquitaine
-* Montrer rapidement les features sur lesquelles les données ont
-  été entrainés
-* Présenter rapidement l'endpoint de classif
-* Présenter rapidement la classe Pydantic
-* Aller sur le terminal et lancer uvicorn
-* Aller sur Chrome et taper le lien de l'API puis aller sur Swagger
-* Walkthough Swagger et test d'une prédiction en live
-* Dire que c'est la même chose qu'on verrait si on faisait un curl
-sur le terminal
-"""
-
-# %%
+import json
 import os
 import mlflow
 from mlflow import MlflowClient
@@ -61,8 +46,8 @@ categorical_features_used = run.data.params.get("categorical_features", "[]")
 # %%
 
 # Parse the JSON strings to get the actual feature lists
-feature_names = eval(features_used)
-categorical_features = eval(categorical_features_used)
+feature_names = json.loads(features_used)
+categorical_features = json.loads(categorical_features_used)
 
 # %%
 feature_names
